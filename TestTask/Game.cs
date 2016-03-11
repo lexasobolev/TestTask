@@ -20,7 +20,7 @@ namespace TestTask
             {
                 try
                 {
-                    using (StreamWriter sr = new StreamWriter("players.xml"))
+                    using (StreamWriter sr = new StreamWriter("players.dat"))
                     {
                         XmlSerializer serializer = new XmlSerializer(typeof(List<Player>));
                         serializer.Serialize(sr, players);
@@ -29,7 +29,7 @@ namespace TestTask
                 }
                 catch (IOException)
                 {
-                    Console.WriteLine("Cannot read file players.xml ...");
+                    Console.WriteLine("Cannot read file players.dat ...");
                     Thread.Sleep(FileIOTimeout);
                 }
             }
@@ -37,13 +37,13 @@ namespace TestTask
         }
         public static List<Player> GetPlayers()
         {
-            if (!File.Exists("players.xml"))
+            if (!File.Exists("players.dat"))
                 return new List<Player>();
             while (true)
             {
                 try
                 {
-                    using (StreamReader sr = new StreamReader("players.xml"))
+                    using (StreamReader sr = new StreamReader("players.dat"))
                     {
                         XmlSerializer serializer = new XmlSerializer(typeof(List<Player>));
                         Players = (List<Player>)serializer.Deserialize(sr);
@@ -52,7 +52,7 @@ namespace TestTask
                 }
                 catch (IOException)
                 {
-                    Console.WriteLine("Cannot read file players.xml ...");
+                    Console.WriteLine("Cannot read file players.dat ...");
                     Thread.Sleep(FileIOTimeout);
                 }
             }
@@ -69,7 +69,7 @@ namespace TestTask
         }
         public static List<Activity> GetActivities(int playerId)
         {
-            string fn = string.Format("activity_{0}.xml", playerId);
+            string fn = string.Format("activity_{0}.dat", playerId);
             Player player = Players.Where(x => x.Id == playerId).FirstOrDefault();
             if (player == null)
                 throw new Exception("No player with id " + playerId + " found");
@@ -116,7 +116,7 @@ namespace TestTask
         {
             if (Players == null || !Players.Any(x => x.Id == activity.PlayerId))
                 throw new Exception("No player with id " + activity.PlayerId + " found");
-            string fn = string.Format("activity_{0}.xml", activity.PlayerId);
+            string fn = string.Format("activity_{0}.dat", activity.PlayerId);
             activity.Time = DateTime.Now;
             while (true)
             {
